@@ -1,0 +1,14 @@
+<resources>
+    <build>
+        <exclude annotation="round_218x218" />
+        <!-- <exclude annotation="round_240x240" /> -->
+        <exclude annotation="semiround_215x180" />
+        <exclude annotation="rectangle_205x148" />
+        <exclude annotation="rectangle_148x205" />
+        <exclude annotation="rectangle_240x400" />
+        <exclude annotation="rectangle_200x265" />
+        
+        <!-- <exclude annotation="high_memory_device" /> -->
+        <exclude annotation="low_memory_device" />
+    </build>
+</resources> 

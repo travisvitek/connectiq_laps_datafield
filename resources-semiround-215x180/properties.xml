@@ -1,0 +1,62 @@
+<resources>
+    <strings>
+        <string id="FieldTitle1">Column 1 Data</string>
+        <string id="FieldTitle2">Column 2 Data</string>
+        <string id="FieldTitle3">Column 3 Data</string>
+        <string id="FieldPrompt">Data to display in the given column</string>
+        
+        <!-- <string id="Time">Lap Number</string> -->
+        <string id="Time">Lap Time</string>
+        <string id="Distance">Lap Distance</string>
+        <string id="Pace">Lap Pace</string>
+        <string id="Speed">Lap Speed</string>
+        
+        <string id="LapAbbr">Lap</string>
+        <string id="TimeAbbr">Time</string>
+        <string id="DistanceAbbr">Dst</string>
+        <string id="PaceAbbr">Pace</string>
+        <string id="SpeedAbbr">Spd</string>
+    </strings>
+
+    <properties>
+   		<property id="Resources" type="string">215x180</property>
+
+        <property id="col0" type="number">0</property>
+        <property id="col1" type="number">1</property>
+        <property id="col2" type="number">2</property>
+        <property id="col3" type="number">3</property>
+    </properties>
+    
+    <settings>
+		<setting propertyKey="@Properties.Resources" title="@Strings.AppName">
+        	<settingConfig type="alphaNumeric" readonly="true" />
+    	</setting>
+
+        <setting propertyKey="@Properties.col1" title="@Strings.FieldTitle1" prompt="@Strings.FieldPrompt">
+            <settingConfig type="list">
+                <listEntry value="1">@Strings.Time</listEntry>
+                <listEntry value="2">@Strings.Distance</listEntry>
+                <listEntry value="3">@Strings.Pace</listEntry>
+                <listEntry value="4">@Strings.Speed</listEntry>
+            </settingConfig>
+        </setting>
+        
+        <setting propertyKey="@Properties.col2" title="@Strings.FieldTitle2" prompt="@Strings.FieldPrompt">
+            <settingConfig type="list">
+                <listEntry value="1">@Strings.Time</listEntry>
+                <listEntry value="2">@Strings.Distance</listEntry>
+                <listEntry value="3">@Strings.Pace</listEntry>
+                <listEntry value="4">@Strings.Speed</listEntry>
+            </settingConfig>
+        </setting>
+        
+        <setting propertyKey="@Properties.col3" title="@Strings.FieldTitle3" prompt="@Strings.FieldPrompt">
+            <settingConfig type="list">
+                <listEntry value="1">@Strings.Time</listEntry>
+                <listEntry value="2">@Strings.Distance</listEntry>
+                <listEntry value="3">@Strings.Pace</listEntry>
+                <listEntry value="4">@Strings.Speed</listEntry>
+            </settingConfig>
+        </setting>
+    </settings>
+</resources>

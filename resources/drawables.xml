@@ -1,0 +1,6 @@
+<resources>
+    <drawables>
+        <bitmap id="LauncherIcon" filename="bitmaps/launcher_icon.png" dithering="none" />
+    </drawables>
+</resources>
+
