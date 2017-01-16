@@ -726,9 +726,11 @@ class MyView extends Ui.DataField
         // device-specific stuff. this would normally come from a layout, but
         // layouts eat up tons of memory.
         _M_rows = _M_model.getLapCount();
-        _M_font = device_font(dc);
-        locX = device_locX(dc);
-        locY = device_locY(dc);
+
+        var details = device_details(dc);
+        _M_font = details[0];
+        locX = details[1];
+        locY = details[2];
         width = dc.getWidth() - (locX * 2);
 
         var twidth = 0;
@@ -756,88 +758,38 @@ class MyView extends Ui.DataField
         return true;
     }
 
-    (:round_218x218) hidden function device_font(dc) {
-        return Gfx.FONT_TINY;
+    (:round_218x218) hidden function device_details(dc) {
+        return [ Gfx.FONT_SYSTEM_TINY, 15, 45 ];
     }
 
-    (:round_240x240) hidden function device_font(dc) {
-        return Gfx.FONT_MEDIUM;
+    (:round_240x240) hidden function device_details(dc) {
+        return [ Gfx.FONT_SYSTEM_TINY, 20, 45 ];
     }
 
-    (:semiround_215x180) hidden function device_font(dc) {
-        return Gfx.FONT_MEDIUM;
+    (:semiround_215x180) hidden function device_details(dc) {
+        return [ Gfx.FONT_SYSTEM_MEDIUM, 15, 30 ];
     }
 
-    (:rectangle_205x148) hidden function device_font(dc) {
-        return Gfx.FONT_MEDIUM;
+    (:rectangle_205x148) hidden function device_details(dc) {
+        return [ Gfx.FONT_SYSTEM_MEDIUM, 0, 0 ];
     }
 
-    (:rectangle_240x400) hidden function device_font(dc) {
+    (:rectangle_240x400) hidden function device_details(dc) {
         if (dc.getWidth() == 400) {
-            return Gfx.FONT_LARGE;
+            return [ Gfx.FONT_SYSTEM_LARGE, 0, 0 ];
         }
         else {
-            return Gfx.FONT_MEDIUM;
+            return [ Gfx.FONT_SYSTEM_MEDIUM, 0, 0 ];
         }
     }
 
-    (:rectangle_200x265) hidden function device_font(dc) {
+    (:rectangle_200x265) hidden function device_details(dc) {
         if (dc.getWidth() == 265) {
-            return Gfx.FONT_LARGE;
+            return [ Gfx.FONT_SYSTEM_LARGE, 0, 0 ];
         }
         else {
-            return Gfx.FONT_MEDIUM;
+            return [ Gfx.FONT_SYSTEM_MEDIUM, 0, 0 ];
         }
-    }
-
-    (:round_218x218) hidden function device_locX(dc) {
-        return 15;
-    }
-
-    (:round_240x240) hidden function device_locX(dc) {
-        return 20;
-    }
-
-    (:semiround_215x180) hidden function device_locX(dc) {
-        return 15;
-    }
-
-    (:rectangle_205x148) hidden function device_locX(dc) {
-        return 0;
-    }
-
-    (:rectangle_240x400) hidden function device_locX(dc) {
-        return 0;
-    }
-
-    (:rectangle_200x265) hidden function device_locX(dc) {
-        return 0;
-    }
-
-
-
-    (:round_218x218) hidden function device_locY(dc) {
-        return 45;
-    }
-
-    (:round_240x240) hidden function device_locY(dc) {
-        return 45;
-    }
-
-    (:semiround_215x180) hidden function device_locY(dc) {
-        return 30;
-    }
-
-    (:rectangle_205x148) hidden function device_locY(dc) {
-        return 0;
-    }
-
-    (:rectangle_240x400) hidden function device_locY(dc) {
-        return 0;
-    }
-
-    (:rectangle_200x265) hidden function device_locY(dc) {
-        return 0;
     }
 
     function onUpdate(dc) {
