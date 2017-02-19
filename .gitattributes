@@ -1,0 +1,11 @@
+
+# Set the default behavior, in case people don't have core.autocrlf set
+* text=auto
+
+# Explicitly declare source and resource files to use native line endings
+*.mc text
+*.xml text
+
+# Explicitly declare image files to be binary
+*.png binary
+*.jpg binary
