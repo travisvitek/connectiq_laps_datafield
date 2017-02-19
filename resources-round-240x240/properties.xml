@@ -1,32 +1,5 @@
 <resources>
-    <strings>
-        <string id="FieldTitle1">Column 1 Data</string>
-        <string id="FieldTitle2">Column 2 Data</string>
-        <string id="FieldTitle3">Column 3 Data</string>
-        <string id="FieldPrompt">Data to display in the given column</string>
-        
-        <!-- <string id="Time">Lap Number</string> -->
-        <string id="Time">Lap Time</string>
-        <string id="Distance">Lap Distance</string>
-        <string id="Pace">Lap Pace</string>
-        <string id="Speed">Lap Speed</string>
-        <string id="Ascent">Lap Ascent</string>
-        <string id="Descent">Lap Descent</string>
-        <string id="Calories">Lap Calories</string>
-        
-        <string id="LapAbbr">Lap</string>
-        <string id="TimeAbbr">Time</string>
-        <string id="DistanceAbbr">Dst</string>
-        <string id="PaceAbbr">Pace</string>
-        <string id="SpeedAbbr">Spd</string>
-        <string id="AscentAbbr">Asc</string>
-        <string id="DescentAbbr">Dsc</string>
-        <string id="CaloriesAbbr">Cal</string>
-    </strings>
-
-    <properties>        
-   		<property id="Resources" type="string">240x240</property>
-
+    <properties>
         <property id="col0" type="number">0</property>
         <property id="col1" type="number">1</property>
         <property id="col2" type="number">2</property>
@@ -34,10 +7,6 @@
     </properties>
     
     <settings>
-		<setting propertyKey="@Properties.Resources" title="@Strings.AppName">
-        	<settingConfig type="alphaNumeric" readonly="true" />
-    	</setting>
-
         <setting propertyKey="@Properties.col1" title="@Strings.FieldTitle1" prompt="@Strings.FieldPrompt">
             <settingConfig type="list">
                 <listEntry value="1">@Strings.Time</listEntry>
