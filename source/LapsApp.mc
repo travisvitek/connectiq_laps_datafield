@@ -544,7 +544,7 @@ class Model
             _M_laps[i].reset();
         }
 
-        _M_lap[_M_off].zero();
+        _M_laps[_M_off].zero();
 
         _M_a_lap.reset();
         _M_p_lap.reset();
