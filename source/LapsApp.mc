@@ -5,23 +5,39 @@ using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
 var m_or_ft = [
-    1.0,        // meters to meters
-    3.28084     // meters to feet
-];
+                  1.0,        // meters to meters
+                  3.28084     // meters to feet
+              ];
 
 const km_or_mi = [
-    0.001,      // meters to kilometers
-    0.000621371 // meters to miles
-];
+                     0.001,      // meters to kilometers
+                     0.000621371 // meters to miles
+                 ];
 
-function format_number(value, deviceSettings)
+// TODO: remove workaround for ConnectIQ bug
+function bool_to_num(b) {
+    return b ? 1 : 0;
+}
+
+function format_number(value)
 {
-    if (value != null) {
-        return value.format("%2d");
+    return value.format("%4d");
+}
+
+function format_float(value)
+{
+    var fmt;
+    if (value < 10.0) {
+        fmt = "%.2f";
+    }
+    else if (value < 100.0) {
+        fmt = "%.1f";
     }
     else {
-        return "--";
+        fmt = "%d";
     }
+
+    return value.format(fmt);
 }
 
 (:high_memory_device) function format_ascent_or_descent(meters, deviceSettings)
@@ -30,27 +46,12 @@ function format_number(value, deviceSettings)
         return "--";
     }
     else {
-        // TODO: remove workaround for ConnectIQ bug
-        deviceSettings.elevationUnits = deviceSettings.elevationUnits ? 1 : 0;
-
-        var distance = m_or_ft[deviceSettings.elevationUnits] * meters;
-
-        var fmt;
-        if (distance < 10) {
-            fmt = "%.2f";
-        }
-        else if (distance < 100) {
-            fmt = "%.1f";
-        }
-        else {
-            fmt = "%d";
-        }
-
-        return distance.format(fmt);
+        var distance = m_or_ft[bool_to_num(deviceSettings.elevationUnits)] * meters;
+        return format_float(distance);
     }
 }
 
-class Number
+class LapFormatter
 {
     hidden var _M_name;
 
@@ -59,7 +60,11 @@ class Number
     }
 
     function format(info, deviceSettings) {
-        return format_number(info.lapNumber, deviceSettings);
+        if (info.lapNumber == null) {
+            return "--";
+        }
+
+        return format_number(info.lapNumber);
     }
 
     function description() {
@@ -71,7 +76,7 @@ class Number
     }
 }
 
-class Distance
+class DistanceFormatter
 {
     hidden var _M_name;
 
@@ -85,23 +90,8 @@ class Distance
             return "--";
         }
         else {
-            // TODO: remove workaround for ConnectIQ bug
-            deviceSettings.distanceUnits = deviceSettings.distanceUnits ? 1 : 0;
-
-            var distance = km_or_mi[deviceSettings.distanceUnits] * info.elapsedDistance;
-
-            var fmt;
-            if (distance < 10) {
-                fmt = "%.2f";
-            }
-            else if (distance < 100) {
-                fmt = "%.1f";
-            }
-            else {
-                fmt = "%d";
-            }
-
-            return distance.format(fmt);
+            var distance = km_or_mi[bool_to_num(deviceSettings.distanceUnits)] * info.elapsedDistance;
+            return format_float(distance);
         }
     }
 
@@ -114,7 +104,7 @@ class Distance
     }
 }
 
-class Time
+class TimeFormatter
 {
     hidden var _M_name;
 
@@ -157,7 +147,7 @@ class Time
     }
 }
 
-class Speed
+class SpeedFormatter
 {
     hidden var _M_name;
 
@@ -168,32 +158,16 @@ class Speed
     function format(info, deviceSettings) {
 
         if (info.elapsedDistance == null ||
-            info.elapsedTime == null ||
-            info.elapsedTime < 1000) {
+                info.elapsedTime == null ||
+                info.elapsedTime < 1000) {
             return "-.--";
         }
 
         var seconds = info.elapsedTime / 1000.0;
-
-        // TODO: remove workaround for ConnectIQ bug
-        deviceSettings.paceUnits = deviceSettings.paceUnits ? 1 : 0;
-
-        var distance = km_or_mi[deviceSettings.paceUnits] * info.elapsedDistance;
-
+        var distance = km_or_mi[bool_to_num(deviceSettings.paceUnits)] * info.elapsedDistance;
         var speed = distance / (seconds / 3600.0);
 
-        var fmt;
-        if (speed < 10) {
-            fmt = "%.2f";
-        }
-        else if (speed < 100) {
-            fmt = "%.1f";
-        }
-        else {
-            fmt = "%d";
-        }
-
-        return speed.format(fmt);
+        return format_float(speed);
     }
 
     function description() {
@@ -205,7 +179,7 @@ class Speed
     }
 }
 
-class Pace
+class PaceFormatter
 {
     hidden var _M_name;
 
@@ -216,17 +190,13 @@ class Pace
     function format(info, deviceSettings) {
 
         if (info.elapsedDistance == null ||
-            info.elapsedTime == null ||
-            info.elapsedDistance < 3) {
+                info.elapsedTime == null ||
+                info.elapsedDistance < 3) {
             return "-:--";
         }
 
         var seconds = info.elapsedTime / 1000.0;
-
-        // TODO: remove workaround for ConnectIQ bug
-        deviceSettings.paceUnits = deviceSettings.paceUnits ? 1 : 0;
-
-        var distance = km_or_mi[deviceSettings.paceUnits] * info.elapsedDistance;
+        var distance = km_or_mi[bool_to_num(deviceSettings.paceUnits)] * info.elapsedDistance;
 
         // seconds is now seconds per distance
         seconds = (seconds / distance).toNumber();
@@ -249,7 +219,7 @@ class Pace
     }
 }
 
-(:high_memory_device) class Ascent
+(:high_memory_device) class AscentFormatter
 {
     hidden var _M_name;
 
@@ -270,7 +240,7 @@ class Pace
     }
 }
 
-(:high_memory_device) class Descent
+(:high_memory_device) class DescentFormatter
 {
     hidden var _M_name;
 
@@ -291,7 +261,7 @@ class Pace
     }
 }
 
-(:high_memory_device) class Calories
+(:high_memory_device) class CaloriesFormatter
 {
     hidden var _M_name;
 
@@ -300,7 +270,11 @@ class Pace
     }
 
     function format(info, deviceSettings) {
-        return format_number(info.calories, deviceSettings);
+        if (info.calories != null) {
+            return "--";
+        }
+
+        return format_number(info.calories);
     }
 
     function description() {
@@ -308,11 +282,11 @@ class Pace
     }
 
     function dimensions(dc, font) {
-        return dc.getTextWidthInPixels("999", font);
+        return dc.getTextWidthInPixels("9999", font);
     }
 }
 
-var _M_formats;
+var _G_formats;
 
 class Model
 {
@@ -327,10 +301,6 @@ class Model
 
         function initialize() {
             // values are initially null already
-        }
-
-        function toString() {
-            return Lang.format("Lap time=$1$", [ elapsedTime ]);
         }
 
         function reset() {
@@ -627,11 +597,11 @@ class Model
     }
 
     (:semiround_215x180) hidden function device_allocateLaps() {
-        return new [ 5 ];
+        return new [ 4 ];
     }
 
     (:rectangle_205x148) hidden function device_allocateLaps() {
-        return new [ 8 ];
+        return new [ 6 ];
     }
 
     (:rectangle_240x400) hidden function device_allocateLaps() {
@@ -697,9 +667,9 @@ class MyView extends Ui.DataField
     var _M_font;
     var _M_offs;
 
-    var locX;
-    var locY;
-    var width;
+    var _M_locX;
+    var _M_locY;
+    var _M_width;
 
     function onLayout(dc) {
         //Sys.println("onLayout");
@@ -720,7 +690,7 @@ class MyView extends Ui.DataField
                 type = i;
             }
 
-            _M_cols[i] = new _M_formats[type]();
+            _M_cols[i] = new _G_formats[type]();
         }
 
         // device-specific stuff. this would normally come from a layout, but
@@ -729,9 +699,9 @@ class MyView extends Ui.DataField
 
         var details = device_details(dc);
         _M_font = details[0];
-        locX = details[1];
-        locY = details[2];
-        width = dc.getWidth() - (locX * 2);
+        _M_locX = details[1];
+        _M_locY = details[2];
+        _M_width = dc.getWidth() - (_M_locX * 2);
 
         var twidth = 0;
         for (var i = 0; i < _M_cols.size(); ++i) {
@@ -752,7 +722,7 @@ class MyView extends Ui.DataField
         }
 
         for (var i = 0; i < _M_cols.size(); ++i) {
-            _M_offs[i] = locX + (width * _M_offs[i] / twidth);
+            _M_offs[i] = _M_locX + (_M_width * _M_offs[i] / twidth);
         }
 
         return true;
@@ -793,23 +763,21 @@ class MyView extends Ui.DataField
     }
 
     function onUpdate(dc) {
-        //Sys.println("onUpdate");
-
         if (_M_offs == null) {
             onLayout(dc);
         }
 
         var bgcolor = getBackgroundColor();
 
-        dc.setColor(~bgcolor & 0x0FFF, bgcolor);
+        dc.setColor(~bgcolor & 0xFFFFFF, bgcolor);
         dc.clear();
 
         var deviceSettings = Sys.getDeviceSettings();
 
         var dy = dc.getFontHeight(_M_font);
 
-        var ty = locY;
-        var by = dc.getHeight() - locY - dy;
+        var ty = _M_locY;
+        var by = dc.getHeight() - _M_locY - dy;
 
         for (var i = 0; i < _M_cols.size(); ++i) {
             var s = _M_cols[i].description();
@@ -849,27 +817,27 @@ class LapsApp extends App.AppBase
     }
 
     hidden function register_formats() {
-        _M_formats = [
-            $.Number,
-            $.Time,
-            $.Distance,
-            $.Pace,
-            $.Speed
-        ];
+        _G_formats = [
+                         $.LapFormatter,
+                         $.TimeFormatter,
+                         $.DistanceFormatter,
+                         $.PaceFormatter,
+                         $.SpeedFormatter
+                     ];
 
         aux_register_formats();
     }
 
     hidden function deregister_formats() {
-        _M_formats = null;
+        _G_formats = null;
     }
 
     (:high_memory_device) hidden function aux_register_formats() {
-        _M_formats.addAll([
-            $.Ascent,
-            $.Descent,
-            $.Calories
-        ]);
+        _G_formats.addAll([
+                              $.AscentFormatter,
+                              $.DescentFormatter,
+                              $.CaloriesFormatter
+                          ]);
     }
 
     (:low_memory_device) hidden function aux_register_formats() {
