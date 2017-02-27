@@ -531,7 +531,13 @@ class Model
     function compute(info) {
 
         if (_M_paused == null) {
-            _M_paused = (info.timerState != Activity.TIMER_STATE_ON);
+            if (info has :timerState) {
+                _M_paused = (info.timerState != Activity.TIMER_STATE_ON);
+            }
+            else {
+                // assume paused to start
+                _M_paused = true;
+            }
         }
 
         if (_M_paused) {
